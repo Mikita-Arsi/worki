@@ -37,10 +37,6 @@ type User struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-type UserWithEmail struct {
-	User
-}
-
 type UserWithPassword struct {
 	User
 	Password string `json:"password" validate:"required"`
