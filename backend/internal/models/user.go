@@ -2,8 +2,6 @@ package models
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type UserToCreate struct {
@@ -15,9 +13,8 @@ type UserToCreate struct {
 }
 
 // ToDB converts UserToCreate to DBUser
-func (user *UserToCreate) ToDB(id uuid.UUID, createdAt time.Time) *DBUser {
+func (user *UserToCreate) ToDB(createdAt time.Time) *DBUser {
 	return &DBUser{
-		ID:        id,
 		Firstname: user.Firstname,
 		Lastname:  user.Lastname,
 		Username:  user.Username,
@@ -29,7 +26,7 @@ func (user *UserToCreate) ToDB(id uuid.UUID, createdAt time.Time) *DBUser {
 
 // User is a JSON user
 type User struct {
-	ID        uuid.UUID `json:"id"`
+	ID        uint      `json:"id"`
 	Firstname string    `json:"firstname" validate:"required"`
 	Lastname  string    `json:"lastname" validate:"required"`
 	Username  string    `json:"username" validate:"required"`
@@ -58,7 +55,7 @@ func (user *UserWithPassword) ToDB() *DBUser {
 // DBUser is a Postgres user
 type DBUser struct {
 	tableName struct{}  `pg:"users" gorm:"primaryKey"`
-	ID        uuid.UUID `pg:"id,notnull,pk"`
+	ID        uint      `pg:"id,notnull,pk"`
 	Firstname string    `pg:"firstname,notnull"`
 	Lastname  string    `pg:"lastname,notnull"`
 	Password  string    `pg:"password,notnull"`
