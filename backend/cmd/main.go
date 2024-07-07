@@ -1,20 +1,22 @@
 package main
 
 import (
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	echoSwagger "github.com/swaggo/echo-swagger"
+	"worki/internal/app"
+	"worki/internal/config"
 )
 
+// @title Worki messenger API
+// @version 0.1
+// @description This is a sample server Petstore server.
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @host localhost:1323
+// @BasePath /v2
 func main() {
-	e := echo.New()
-
-	// Middleware
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-
-	e.GET("/swagger/*", echoSwagger.WrapHandler)
-
-	// Start server
-	e.Logger.Fatal(e.Start(":1323"))
+	cfg := config.Config{}
+	app.RunApp(&cfg)
 }

@@ -2,7 +2,7 @@ package storage
 
 import (
 	"fmt"
-	"os"
+	"worki/internal/config"
 	"worki/internal/models"
 
 	"gorm.io/driver/postgres"
@@ -13,17 +13,19 @@ var (
 	DB *gorm.DB
 )
 
-func init() {
-	dbUser := os.Getenv("POSTGRES_USER")
-	dbPassword := os.Getenv("POSTGRES_PASSWORD")
-	dbName := os.Getenv("POSTGRES_DB")
+func InitDB(cfg *config.Config) {
+	fmt.Print(cfg.NameDB, cfg.PasswordDB, cfg.UserDB)
 	var err error
-	dsn := fmt.Sprintf("postgresql://%s:%s@postgres:5432/%s?sslmode=disable", dbUser, dbPassword, dbName)
+	dsn := fmt.Sprintf(
+		"postgresql://%s:%s@postgres:5432/%s?sslmode=disable",
+		cfg.UserDB,
+		cfg.PasswordDB,
+		cfg.NameDB,
+	)
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect to database")
 	}
 
-	// Auto migrate the User model
 	DB.AutoMigrate(&models.User{})
 }

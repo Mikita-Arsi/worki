@@ -7,11 +7,10 @@ import (
 	"worki/internal/storage"
 
 	"github.com/AlhimicMan/goswag/wrapper"
-	"github.com/google/uuid"
 )
 
 type DeleteUserReq struct {
-	ID uuid.UUID `json:"id" validate:"uuid"`
+	ID uint `json:"id" validate:"uuid"`
 }
 
 type DeleteUserRes struct {
