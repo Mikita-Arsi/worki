@@ -14,7 +14,6 @@ var (
 )
 
 func InitDB(cfg *config.Config) {
-	fmt.Print(cfg.NameDB, cfg.PasswordDB, cfg.UserDB)
 	var err error
 	dsn := fmt.Sprintf(
 		"postgresql://%s:%s@postgres:5432/%s?sslmode=disable",
