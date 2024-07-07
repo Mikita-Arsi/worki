@@ -8,4 +8,4 @@ $ make run
 ```
 
 ## Project architecture
-![figma](https://github.com/Mikita-Arsi/worki/assets/73067214/d7707df6-b7e6-4af5-81a1-60c5bbbf42ce)
+![image_2024-07-07_22-37-02](https://github.com/Mikita-Arsi/worki/assets/73067214/daceefb0-7418-4d49-a4b9-a2ea194f3f5b)
