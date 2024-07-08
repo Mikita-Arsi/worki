@@ -32,10 +32,8 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
       - POSTGRES_DB
-
     depends_on:
       - postgres
-
     networks:
       - worki_net
 

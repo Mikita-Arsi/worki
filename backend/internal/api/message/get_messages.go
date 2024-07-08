@@ -1,17 +1,9 @@
 package message
 
-import (
-	"context"
-	"net/http"
-	"worki/internal/models"
-	"worki/internal/storage"
-
-	"github.com/AlhimicMan/goswag/wrapper"
-)
-
+/*
 func GetMessages(ctx context.Context, httpReq *http.Request) ([]models.Message, error) {
 	var messages []models.DBMessage
-	dbRequest := storage.DB.Model(&messages).Find(&messages)
+	dbRequest := storage.GetDB().Model(&messages).Find(&messages)
 	if dbRequest.Error != nil {
 		errRes := wrapper.ErrorResult{
 			Status:  http.StatusBadRequest,
@@ -25,3 +17,4 @@ func GetMessages(ctx context.Context, httpReq *http.Request) ([]models.Message, 
 	}
 	return result, nil
 }
+*/

@@ -1,14 +1,5 @@
 package chat
 
-import (
-	"context"
-	"net/http"
-	"worki/internal/models"
-	"worki/internal/storage"
-
-	"github.com/AlhimicMan/goswag/wrapper"
-)
-
 type RemoveUserFromChatReq struct {
 	ChatID uint `json:"chat_id" validate:"required"`
 	UserID uint `json:"user_id" validate:"required"`
@@ -17,9 +8,10 @@ type RemoveUserFromChatReq struct {
 type RemoveUserFromChatRes struct {
 }
 
+/*
 func RemoveUserFromChat(ctx context.Context, req RemoveUserFromChatReq, httpReq *http.Request) (RemoveUserFromChatRes, *wrapper.ErrorResult) {
 	chat := &models.DBChat{}
-	dbRequest := storage.DB.Model(chat).
+	dbRequest := storage.GetDB().Model(chat).
 		Where("id = ?", req.ChatID).
 		First(chat)
 	if dbRequest.Error != nil {
@@ -38,7 +30,7 @@ func RemoveUserFromChat(ctx context.Context, req RemoveUserFromChatReq, httpReq 
 		}
 	}
 	chat.UsersID = updatedUsersID
-	updateRequest := storage.DB.Save(chat)
+	updateRequest := storage.GetDB().Save(chat)
 	if updateRequest.Error != nil {
 		errRes := wrapper.ErrorResult{
 			Status:  http.StatusInternalServerError,
@@ -49,3 +41,4 @@ func RemoveUserFromChat(ctx context.Context, req RemoveUserFromChatReq, httpReq 
 
 	return RemoveUserFromChatRes{}, nil
 }
+*/

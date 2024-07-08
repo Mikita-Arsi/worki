@@ -12,7 +12,7 @@ import (
 func CreateChat(ctx echo.Context, req models.ChatToCreate, httpReq *http.Request) (models.Chat, error) {
 	createdAt := time.Now()
 	dbChat := req.ToDB(createdAt)
-	dbRequest := storage.DB.Create(dbChat)
+	dbRequest := storage.GetDB().Create(dbChat)
 	if dbRequest.Error != nil {
 		return models.Chat{}, dbRequest.Error
 	}

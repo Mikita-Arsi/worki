@@ -1,14 +1,5 @@
 package chat
 
-import (
-	"context"
-	"net/http"
-	"worki/internal/models"
-	"worki/internal/storage"
-
-	"github.com/AlhimicMan/goswag/wrapper"
-)
-
 type DeleteChatReq struct {
 	ID uint `json:"id" validate:"uuid"`
 }
@@ -16,8 +7,9 @@ type DeleteChatReq struct {
 type DeleteChatRes struct {
 }
 
+/*
 func DeleteChat(ctx context.Context, req DeleteChatReq, httpReq *http.Request) (DeleteChatRes, *wrapper.ErrorResult) {
-	dbRequest := storage.DB.Delete(&models.DBChat{}, req.ID)
+	dbRequest := storage.GetDB().Delete(&models.DBChat{}, req.ID)
 	if dbRequest.Error != nil {
 		errRes := wrapper.ErrorResult{
 			Status:  http.StatusBadRequest,
@@ -27,3 +19,4 @@ func DeleteChat(ctx context.Context, req DeleteChatReq, httpReq *http.Request) (
 	}
 	return DeleteChatRes{}, nil
 }
+*/

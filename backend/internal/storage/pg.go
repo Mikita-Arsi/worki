@@ -10,10 +10,14 @@ import (
 )
 
 var (
-	DB *gorm.DB
+	db *gorm.DB
 )
 
 func InitDB(cfg *config.Config) {
+	test := "dihiq"
+	fmt.Printf("%v %v %v %v", test, cfg.UserDB,
+		cfg.PasswordDB,
+		cfg.NameDB)
 	var err error
 	dsn := fmt.Sprintf(
 		"postgresql://%s:%s@postgres:5432/%s?sslmode=disable",
@@ -21,10 +25,14 @@ func InitDB(cfg *config.Config) {
 		cfg.PasswordDB,
 		cfg.NameDB,
 	)
-	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect to database")
 	}
 
-	DB.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.UserDB{})
+}
+
+func GetDB() *gorm.DB {
+	return db
 }

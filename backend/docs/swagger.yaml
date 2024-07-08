@@ -1,0 +1,76 @@
+definitions:
+  schemas.HTTPError:
+    properties:
+      code:
+        type: integer
+      detail:
+        type: string
+      internal: {}
+    type: object
+  schemas.User:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      id:
+        type: integer
+      lastname:
+        type: string
+      username:
+        type: string
+    required:
+    - firstname
+    - lastname
+    - username
+    type: object
+  schemas.UserToCreate:
+    properties:
+      email:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - firstname
+    - password
+    - username
+    type: object
+host: localhost:1323
+info:
+  contact:
+    email: support@worki.io
+    name: Worki Support
+  description: This is API for Worki Messanger.
+  title: Worki messenger API
+  version: "0.1"
+paths:
+  /users:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: user data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/schemas.UserToCreate'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/schemas.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Create user
+swagger: "2.0"

@@ -18,7 +18,7 @@ type GetChatUsersRes struct {
 
 func GetChatUsers(e echo.Context, req GetChatUsersReq, httpReq *http.Request) (GetChatUsersRes, error) {
 	chat := &models.DBChat{}
-	dbRequest := storage.DB.Model(chat).
+	dbRequest := storage.GetDB().Model(chat).
 		Where("id = ?", req.ID).
 		First(chat)
 	if dbRequest.Error != nil {
