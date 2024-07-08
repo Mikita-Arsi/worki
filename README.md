@@ -4,7 +4,7 @@
 
 ### Start using it
 ```sh_
-$ make run
+make run
 ```
 
 ## Project architecture
