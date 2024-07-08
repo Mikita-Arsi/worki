@@ -16,11 +16,18 @@ func RunApp(cfg *config.Config) {
 	storage.InitDB(cfg)
 	e := echo.New()
 
-	e.Use(logger.LogRequest)
 	e.Use(middleware.Recover())
+	usersGroup := e.Group("/users")
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
-	e.POST("/users", api.CreateUser)
+	usersGroup.POST("/", api.CreateUser)
+	usersGroup.GET("/", api.GetUsers)
+	usersGroup.GET("/:id", api.GetUserByID)
+	usersGroup.GET("/:username", api.GetUserByUsername)
+	usersGroup.PUT("/", api.UpdateUser)
+	usersGroup.DELETE("/:id", api.DeleteUserByID)
+	usersGroup.DELETE("/:username", api.DeleteUserByUsername)
+	usersGroup.Use(logger.LogRequest)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

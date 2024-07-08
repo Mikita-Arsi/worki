@@ -10,8 +10,8 @@ type UserDB struct {
 	gorm.Model
 	Firstname string `json:"firstname" validate:"required"`
 	Lastname  string `json:"lastname" validate:"required"`
-	Username  string `json:"username" validate:"required"`
-	Email     string `json:"email"  validate:"email"`
+	Username  string `pg:"unique" json:"username" validate:"required"`
+	Email     string `pg:"unique" json:"email"  validate:"email"`
 	Password  string `json:"password" validate:"required"`
 }
 

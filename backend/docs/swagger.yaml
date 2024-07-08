@@ -1,11 +1,7 @@
 definitions:
   schemas.HTTPError:
     properties:
-      code:
-        type: integer
-      detail:
-        type: string
-      internal: {}
+      message: {}
     type: object
   schemas.User:
     properties:
@@ -43,6 +39,13 @@ definitions:
     - password
     - username
     type: object
+  schemas.Users:
+    properties:
+      users:
+        items:
+          $ref: '#/definitions/schemas.User'
+        type: array
+    type: object
 host: localhost:1323
 info:
   contact:
@@ -52,12 +55,29 @@ info:
   title: Worki messenger API
   version: "0.1"
 paths:
-  /users:
+  /users/:
+    get:
+      consumes:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.Users'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Get users
     post:
       consumes:
       - application/json
       parameters:
-      - description: user data
+      - description: User data
         in: body
         name: request
         required: true
@@ -72,5 +92,127 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
       summary: Create user
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/schemas.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Delete user by ID
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Get user by ID
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: User data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/schemas.User'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/schemas.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Update user
+  /users/{username}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Account ID
+        in: path
+        name: username
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/schemas.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Delete user by Username
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Username
+        in: path
+        name: username
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Get user by Username
 swagger: "2.0"
