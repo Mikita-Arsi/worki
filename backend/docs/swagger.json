@@ -1,76 +1,80 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is API for Worki Messanger.",
-        "title": "Worki messenger API",
+        "description": "This is the API documentation for Worki Messenger.",
+        "version": "1.0.0",
+        "title": "Worki Messenger API",
         "contact": {
-            "name": "Worki Support",
             "email": "support@worki.io"
-        },
-        "version": "0.1"
+        }
     },
     "host": "localhost:1323",
+    "basePath": "/v1",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
     "paths": {
-        "/users/": {
+        "/users": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "summary": "Get users",
+                "summary": "Get all users",
+                "description": "Returns a list of all users.",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Successful operation",
                         "schema": {
-                            "$ref": "#/definitions/schemas.Users"
+                            "$ref": "#/definitions/UsersResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found",
+                        "description": "No users found",
                         "schema": {
-                            "$ref": "#/definitions/schemas.HTTPError"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/schemas.HTTPError"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
             },
             "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "summary": "Create user",
+                "summary": "Create a new user",
+                "description": "Create a new user with the provided details.",
                 "parameters": [
                     {
-                        "description": "User data",
-                        "name": "request",
+                        "name": "user",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/schemas.UserToCreate"
+                            "$ref": "#/definitions/User"
                         }
                     }
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "User created successfully",
                         "schema": {
-                            "$ref": "#/definitions/schemas.User"
+                            "$ref": "#/definitions/User"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Invalid input, required fields are missing",
                         "schema": {
-                            "$ref": "#/definitions/schemas.HTTPError"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/schemas.HTTPError"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -78,180 +82,248 @@
         },
         "/users/{id}": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
                 "summary": "Get user by ID",
+                "description": "Returns the user with the specified ID.",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Account ID",
                         "name": "id",
                         "in": "path",
-                        "required": true
+                        "required": true,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Successful operation",
                         "schema": {
-                            "$ref": "#/definitions/schemas.User"
+                            "$ref": "#/definitions/User"
                         }
                     },
                     "404": {
-                        "description": "Not Found",
+                        "description": "User not found",
                         "schema": {
-                            "$ref": "#/definitions/schemas.HTTPError"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/schemas.HTTPError"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
             },
             "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "summary": "Update user",
+                "summary": "Update user by ID",
+                "description": "Updates the user with the specified ID.",
                 "parameters": [
                     {
-                        "description": "User data",
-                        "name": "request",
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "user",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/schemas.User"
+                            "$ref": "#/definitions/User"
                         }
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "User updated successfully",
                         "schema": {
-                            "$ref": "#/definitions/schemas.User"
+                            "$ref": "#/definitions/User"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Invalid input, required fields are missing",
                         "schema": {
-                            "$ref": "#/definitions/schemas.HTTPError"
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/schemas.HTTPError"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
             },
             "delete": {
-                "consumes": [
-                    "application/json"
-                ],
                 "summary": "Delete user by ID",
+                "description": "Deletes the user with the specified ID.",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Account ID",
                         "name": "id",
                         "in": "path",
-                        "required": true
+                        "required": true,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
                     "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "$ref": "#/definitions/schemas.User"
-                        }
+                        "description": "User deleted successfully"
                     },
                     "404": {
-                        "description": "Not Found",
+                        "description": "User not found",
                         "schema": {
-                            "$ref": "#/definitions/schemas.HTTPError"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/schemas.HTTPError"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
             }
         },
-        "/users/{username}": {
+        "/chats": {
             "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "summary": "Get user by Username",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Username",
-                        "name": "username",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
+                "summary": "Get all chats",
+                "description": "Returns a list of all chats.",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Successful operation",
                         "schema": {
-                            "$ref": "#/definitions/schemas.User"
+                            "$ref": "#/definitions/ChatsResponse"
                         }
                     },
                     "404": {
-                        "description": "Not Found",
+                        "description": "No chats found",
                         "schema": {
-                            "$ref": "#/definitions/schemas.HTTPError"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/schemas.HTTPError"
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
             },
-            "delete": {
-                "consumes": [
-                    "application/json"
-                ],
-                "summary": "Delete user by Username",
+            "post": {
+                "summary": "Create a new chat",
+                "description": "Create a new chat with the provided details.",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Account ID",
-                        "name": "username",
-                        "in": "path",
-                        "required": true
+                        "name": "chat",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Chat"
+                        }
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "No Content",
+                    "201": {
+                        "description": "Chat created successfully",
                         "schema": {
-                            "$ref": "#/definitions/schemas.User"
+                            "$ref": "#/definitions/Chat"
                         }
                     },
-                    "404": {
-                        "description": "Not Found",
+                    "400": {
+                        "description": "Invalid input, required fields are missing",
                         "schema": {
-                            "$ref": "#/definitions/schemas.HTTPError"
+                            "$ref": "#/definitions/Error"
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error",
+                        "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/schemas.HTTPError"
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/chats/{id}/messages": {
+            "get": {
+                "summary": "Get messages in a chat",
+                "description": "Returns a list of messages in the chat with the specified ID.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/MessagesResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Chat or messages not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Send a message to a chat",
+                "description": "Send a message to the chat with the specified ID.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "message",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Message"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Message sent successfully",
+                        "schema": {
+                            "$ref": "#/definitions/Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input, required fields are missing",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Chat not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
                         }
                     }
                 }
@@ -259,73 +331,126 @@
         }
     },
     "definitions": {
-        "schemas.HTTPError": {
+        "User": {
             "type": "object",
             "properties": {
-                "message": {}
-            }
-        },
-        "schemas.User": {
-            "type": "object",
-            "required": [
-                "firstname",
-                "lastname",
-                "username"
-            ],
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "firstname": {
-                    "type": "string"
-                },
                 "id": {
-                    "type": "integer"
-                },
-                "lastname": {
-                    "type": "string"
+                    "type": "integer",
+                    "example": 1
                 },
                 "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "schemas.UserToCreate": {
-            "type": "object",
-            "required": [
-                "firstname",
-                "password",
-                "username"
-            ],
-            "properties": {
+                    "type": "string",
+                    "example": "john_doe"
+                },
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "john.doe@example.com"
                 },
-                "firstname": {
-                    "type": "string"
+                "firstName": {
+                    "type": "string",
+                    "example": "John"
                 },
-                "lastname": {
-                    "type": "string"
+                "lastName": {
+                    "type": "string",
+                    "example": "Doe"
                 },
-                "password": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2024-07-10T10:00:00Z"
                 }
-            }
+            },
+            "required": ["username", "email", "firstName", "lastName"]
         },
-        "schemas.Users": {
+        "Chat": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Worki Team Chat"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2024-07-10T10:00:00Z"
+                }
+            },
+            "required": ["name"]
+        },
+        "Message": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "chatId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "senderId": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "content": {
+                    "type": "string",
+                    "example": "Hello, how are you?"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2024-07-10T10:00:00Z"
+                }
+            },
+            "required": ["chatId", "senderId", "content"]
+        },
+        "UsersResponse": {
             "type": "object",
             "properties": {
                 "users": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/schemas.User"
+                        "$ref": "#/definitions/User"
                     }
+                }
+            }
+        },
+        "ChatsResponse": {
+            "type": "object",
+            "properties": {
+                "chats": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Chat"
+                    }
+                }
+            }
+        },
+        "MessagesResponse": {
+            "type": "object",
+            "properties": {
+                "messages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Message"
+                    }
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 404
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Resource not found"
                 }
             }
         }
