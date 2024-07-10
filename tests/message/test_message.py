@@ -24,7 +24,7 @@ def test_create():
     assert resp.status_code == 201, GlobalErrorMessages.WRONG_STATUS_CODE
 
 
-def test_get_chats():
+def test_get_messages():
     resp = requests.get(CHAT_LIST).json()
     chat_id = resp[0]["id"]
     resp = requests.get(CHAT_LIST + str(chat_id))
