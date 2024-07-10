@@ -18,5 +18,5 @@ type Message struct {
 }
 
 type Messages struct {
-	Messages []Message
+	Messages []Message `json:"messages"`
 }

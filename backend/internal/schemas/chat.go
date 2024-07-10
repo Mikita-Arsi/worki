@@ -11,22 +11,10 @@ type ChatUserToCreate struct {
 	FromID uint `json:"from_id"`
 }
 
-type ChatMessageToCreate struct {
-	ChatID uint `json:"chat_id"`
-	FromID uint `json:"from_id"`
-}
-
 type ChatUser struct {
 	ID        uint      `json:"id"`
 	ChatID    uint      `json:"chat_id"`
 	FromID    uint      `json:"from_id"`
-	CreatedAt time.Time `json:"created_at"`
-}
-
-type ChatMessage struct {
-	ID        uint      `json:"id"`
-	ChatID    uint      `json:"chat_id"`
-	MessageID uint      `json:"message_id"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
@@ -37,6 +25,12 @@ type Chat struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+// Chat is a JSON chat
+type ChatToUpdate struct {
+	ID   uint   `json:"id"`
+	Name string `json:"name"`
+}
+
 type Chats struct {
-	Chats []Chats `json:"chats"`
+	Chats []Chat `json:"chats"`
 }

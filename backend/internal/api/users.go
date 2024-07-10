@@ -11,6 +11,7 @@ import (
 )
 
 // @Summary Create user
+// @Tags Users
 // @Accept json
 // @Param request body schemas.UserToCreate true "User data"
 // @Success 201 {object} schemas.User
@@ -40,6 +41,7 @@ func CreateUser(c echo.Context) error {
 }
 
 // @Summary Get users
+// @Tags Users
 // @Accept json
 // @Success 200 {object} schemas.Users
 // @Failure 404 {object} schemas.HTTPError
@@ -59,6 +61,7 @@ func GetUsers(c echo.Context) error {
 }
 
 // @Summary Get user by ID
+// @Tags Users
 // @Accept json
 // @Param id path int true "Account ID"
 // @Success 200 {object} schemas.User
@@ -76,6 +79,7 @@ func GetUserByID(c echo.Context) error {
 }
 
 // @Summary Get user by Username
+// @Tags Users
 // @Accept json
 // @Param username path string true "Username"
 // @Success 200 {object} schemas.User
@@ -87,14 +91,13 @@ func GetUserByUsername(c echo.Context) error {
 	var user models.UserDB
 	tx := storage.GetDB().First(&user, "username = ?", username)
 	if tx.Error != nil {
-		return c.JSON(500, schemas.HTTPError{
-			Message: tx.Error,
-		})
+		return c.JSON(404, echo.ErrNotFound)
 	}
 	return c.JSON(200, user.ToWeb())
 }
 
 // @Summary Update user
+// @Tags Users
 // @Accept json
 // @Param request body schemas.UserToUpdate true "User data"
 // @Success 201 {object} schemas.User
@@ -125,6 +128,7 @@ func UpdateUser(c echo.Context) error {
 }
 
 // @Summary Delete user by ID
+// @Tags Users
 // @Accept json
 // @Param id path int true "Account ID"
 // @Success 204 {object} nil
@@ -141,6 +145,7 @@ func DeleteUserByID(c echo.Context) error {
 }
 
 // @Summary Delete user by Username
+// @Tags Users
 // @Accept json
 // @Param username path string true "Account Username"
 // @Success 204 {object} nil

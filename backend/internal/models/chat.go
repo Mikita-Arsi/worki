@@ -18,10 +18,6 @@ type ChatUserDB struct {
 	FromID uint `json:"from_id"`
 }
 
-type ChatUsersDB struct {
-	Users []ChatUserDB `json:"users"`
-}
-
 // ToWeb converts DBChat to Chat
 func (dbChat *ChatDB) ToWeb() *schemas.Chat {
 	return &schemas.Chat{
