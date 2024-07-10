@@ -11,6 +11,7 @@ type UserToCreate struct {
 }
 
 type UserToUpdate struct {
+	ID        uint   `json:"id"`
 	Firstname string `json:"firstname" validate:"required"`
 	Lastname  string `json:"lastname"`
 	Username  string `json:"username" validate:"required"`

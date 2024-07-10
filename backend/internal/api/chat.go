@@ -138,10 +138,7 @@ func RemoveUserFromChat(c echo.Context) error {
 // @Failure 500 {object} schemas.HTTPError
 // @Router /chats/{id} [delete]
 func DeleteChat(c echo.Context) error {
-	chatID, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, schemas.HTTPError{Message: "Invalid chat ID"})
-	}
+
 
 	dbRequest := storage.GetDB().Delete(&models.DBChat{}, chatID)
 	if dbRequest.Error != nil {

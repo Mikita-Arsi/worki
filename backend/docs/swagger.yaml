@@ -39,6 +39,22 @@ definitions:
     - password
     - username
     type: object
+  schemas.UserToUpdate:
+    properties:
+      email:
+        type: string
+      firstname:
+        type: string
+      id:
+        type: integer
+      lastname:
+        type: string
+      username:
+        type: string
+    required:
+    - firstname
+    - username
+    type: object
   schemas.Users:
     properties:
       users:
@@ -151,7 +167,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/schemas.User'
+          $ref: '#/definitions/schemas.UserToUpdate'
       responses:
         "201":
           description: Created
@@ -166,7 +182,7 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Update user
-  /users/{username}:
+  /users/usr/{username}:
     delete:
       consumes:
       - application/json
@@ -179,10 +195,6 @@ paths:
       responses:
         "204":
           description: No Content
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
         "500":
           description: Internal Server Error
           schema:
@@ -202,10 +214,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/schemas.User'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
         "500":
           description: Internal Server Error
           schema:

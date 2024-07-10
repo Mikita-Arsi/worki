@@ -7,12 +7,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type MessageToCreate struct {
-	ChatID int    `json:"chat_id" validate:"required"`
-	FromID int    `json:"from_id" validate:"required"`
-	Text   string `json:"text" validate:"required"`
-}
-
 // DBMessage is a Postgres message
 type MessageDB struct {
 	gorm.Model

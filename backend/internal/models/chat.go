@@ -5,8 +5,8 @@ import (
 )
 
 type ChatToCreate struct {
-	UsersID    []uint `json:"users_id" validate:"required"`
-	MessagesID []uint `json:"messages_id" validate:"required"`
+	UsersID    []int `json:"users_id" validate:"required"`
+	MessagesID []int `json:"messages_id" validate:"required"`
 }
 
 // ToDB converts ChatToCreate to DBChat
@@ -20,9 +20,9 @@ func (chat *ChatToCreate) ToDB(createdAt time.Time) *DBChat {
 
 // Chat is a JSON chat
 type Chat struct {
-	ID         uint      `json:"id"`
-	UsersID    []uint    `json:"users_id" validate:"required"`
-	MessagesID []uint    `json:"messages_id" validate:"required"`
+	ID         int       `json:"id"`
+	UsersID    []int     `json:"users_id" validate:"required"`
+	MessagesID []int     `json:"messages_id" validate:"required"`
 	CreatedAt  time.Time `json:"created_at"`
 }
 
@@ -39,9 +39,9 @@ func (chat *Chat) ToDB() *DBChat {
 // DBChat is a Postgres chat
 type DBChat struct {
 	tableName  struct{}  `pg:"chats" gorm:"primaryKey"`
-	ID         uint      `pg:"id,notnull,pk"`
-	UsersID    []uint    `pg:"users_id,notnull"`
-	MessagesID []uint    `pg:"messages_id,notnull"`
+	ID         int       `pg:"id,notnull,pk"`
+	UsersID    []int     `pg:"users_id,notnull"`
+	MessagesID []int     `pg:"messages_id,notnull"`
 	CreatedAt  time.Time `pg:"created_at,notnull"`
 }
 
