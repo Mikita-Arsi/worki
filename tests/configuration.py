@@ -1,2 +1,2 @@
-USERS_LIST = 'http://localhost:1323/users/'
-CHAT_LIST = 'http://localhost:1323/chats/'
+USERS_LIST = 'http://localhost:80/users/'
+CHAT_LIST = 'http://localhost:80/chats/'

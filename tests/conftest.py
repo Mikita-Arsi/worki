@@ -26,6 +26,11 @@ def _delete_user(user_id):
     return response
 
 
+def _delete_user_by_username(username):
+    response = requests.delete(USERS_LIST + "/usr/" + username)
+    return response
+
+
 @pytest.fixture
 def create_user():
     return _create_user
@@ -36,4 +41,6 @@ def delete_user():
     return _delete_user
 
 
-print(USERS_LIST + str(1))
+@pytest.fixture
+def delete_user_by_username():
+    return _delete_user_by_username
