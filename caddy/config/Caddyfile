@@ -1,0 +1,3 @@
+:80 {
+  reverse_proxy backend1:1323 backend1:1323
+}

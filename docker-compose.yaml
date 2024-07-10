@@ -21,13 +21,29 @@ services:
     networks:
       - worki_net
       
-  backend:
+  backend1:
     build: 
       context: ./backend
-    container_name: backend
+    container_name: backend1
     restart: always
     ports:
-      - 1323:1323
+      - 1323
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    depends_on:
+      - postgres
+    networks:
+      - worki_net
+
+  backend2:
+    build: 
+      context: ./backend
+    container_name: backend2
+    restart: always
+    ports:
+      - 1323
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
@@ -98,3 +114,16 @@ services:
       DYNAMIC_CONFIG_ENABLED: "true"
     networks:
       - worki_net
+
+  caddy-lb:
+    networks:
+      - worki_net
+    image: caddy:2-alpine
+    volumes:
+      - ./caddy/data:/data
+      - ./caddy/config/Caddyfile:/etc/caddy/Caddyfile
+    depends_on:
+      - backend1
+      - backend2
+    ports:
+      - "80:80"

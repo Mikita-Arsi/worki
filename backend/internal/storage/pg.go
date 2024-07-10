@@ -31,6 +31,9 @@ func InitDB(cfg *config.Config) {
 	}
 
 	db.AutoMigrate(&models.UserDB{})
+	db.AutoMigrate(&models.ChatUserDB{})
+	db.AutoMigrate(&models.ChatDB{})
+	db.AutoMigrate(&models.MessageDB{})
 }
 
 func GetDB() *gorm.DB {
