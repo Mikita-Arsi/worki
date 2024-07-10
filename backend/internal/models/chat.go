@@ -24,6 +24,14 @@ type ChatMessageDB struct {
 	MessageID uint `json:"message_id"`
 }
 
+type ChatMessagesDB struct {
+	messages []ChatMessageDB `json:"messages"`
+}
+
+type ChatUsersDB struct {
+	users []ChatUserDB `json:"users"`
+}
+
 // ToWeb converts DBChat to Chat
 func (dbChat *DBChat) ToWeb() *schemas.Chat {
 	return &schemas.Chat{

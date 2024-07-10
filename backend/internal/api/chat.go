@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-/*
+
 // @Summary Create chat
 // @Accept json
 // @Param request body schemas.ChatToCreate true "Chat data"
@@ -18,20 +18,18 @@ import (
 // @Failure 500 {object} schemas.HTTPError
 // @Router /chats/ [post]
 func CreateChat(c echo.Context) error {
-	req := new(models.ChatToCreate)
+	req := new(models.ChatDB)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.ErrBadRequest)
 	}
-
-	createdAt := time.Now()
-	dbChat := req.ToDB(createdAt)
-	dbRequest := storage.GetDB().Create(dbChat)
-	if dbRequest.Error != nil {
-		return c.JSON(http.StatusInternalServerError, schemas.HTTPError{Message: dbRequest.Error.Error()})
+	tx := storage.GetDB().Create(&req)
+	if tx.Error != nil {
+		return c.JSON(500, schemas.HTTPError{
+			Message: tx.Error,
+		})
 	}
-
-	return c.JSON(http.StatusCreated, dbChat.ToWeb())
-}*/
+	return c.JSON(201, req.ToWeb())
+}
 
 // @Summary Add user to chat
 // @Accept json
@@ -60,7 +58,7 @@ func AddUserToChat(c echo.Context) error {
 	return c.NoContent(http.StatusNoContent)
 }
 
-/*
+
 // @Summary Get chat messages
 // @Accept json
 // @Param id path int true "Chat ID"
@@ -74,15 +72,14 @@ func GetChatMessages(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, schemas.HTTPError{Message: "Invalid chat ID"})
 	}
 
-	chat := &models.DBChat{}
-	dbRequest := storage.GetDB().Where("id = ?", chatID).First(chat)
+	chat := &models.MessagesDB{}
+	dbRequest := storage.GetDB().Where("id = ?", chatID).Find(chat)
 	if dbRequest.Error != nil {
 		return c.JSON(http.StatusInternalServerError, schemas.HTTPError{Message: dbRequest.Error.Error()})
 	}
-
-	return c.JSON(http.StatusOK, schemas.GetChatMessagesRes{MessagesID: chat.MessagesID})
+	return c.JSON(http.StatusOK, chat)
 }
-
+/*
 // @Summary Get chat users
 // @Accept json
 // @Param id path int true "Chat ID"

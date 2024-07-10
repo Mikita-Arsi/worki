@@ -10,3 +10,7 @@ type Message struct {
 	Text      string    `json:"text" validate:"required"`
 	CreatedAt time.Time `json:"created_at"`
 }
+
+type Messages struct {
+	Messages []Message
+}
