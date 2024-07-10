@@ -20,17 +20,6 @@ definitions:
       name:
         type: string
     type: object
-  schemas.ChatUser:
-    properties:
-      chat_id:
-        type: integer
-      created_at:
-        type: string
-      from_id:
-        type: integer
-      id:
-        type: integer
-    type: object
   schemas.ChatUserToCreate:
     properties:
       chat_id:
@@ -155,30 +144,6 @@ info:
   version: "0.1"
 paths:
   /chats/:
-    delete:
-      consumes:
-      - application/json
-      parameters:
-      - description: Remove User from Chat data
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/schemas.ChatUser'
-      responses:
-        "204":
-          description: No Content
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-      summary: Remove user from chat
-      tags:
-      - Chats
     get:
       consumes:
       - application/json
@@ -374,6 +339,31 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Add user to chat
+      tags:
+      - Chats
+  /chats/user:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Remove User from Chat data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/schemas.ChatUserToCreate'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Remove user from chat
       tags:
       - Chats
   /messages/:
