@@ -2,13 +2,13 @@ package api
 
 import (
 	"net/http"
+	"strconv"
 	"worki/internal/models"
 	"worki/internal/schemas"
 	"worki/internal/storage"
 
 	"github.com/labstack/echo/v4"
 )
-
 
 // @Summary Create chat
 // @Accept json
@@ -58,7 +58,6 @@ func AddUserToChat(c echo.Context) error {
 	return c.NoContent(http.StatusNoContent)
 }
 
-
 // @Summary Get chat messages
 // @Accept json
 // @Param id path int true "Chat ID"
@@ -79,6 +78,7 @@ func GetChatMessages(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, chat)
 }
+
 /*
 // @Summary Get chat users
 // @Accept json

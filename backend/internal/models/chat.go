@@ -7,7 +7,7 @@ import (
 )
 
 // DBChat is a Postgres chat
-type DBChat struct {
+type ChatDB struct {
 	gorm.Model
 	Name string `json:"name"`
 }
@@ -18,22 +18,12 @@ type ChatUserDB struct {
 	FromID uint `json:"from_id"`
 }
 
-type ChatMessageDB struct {
-	gorm.Model
-	ChatID    uint `json:"chat_id"`
-	MessageID uint `json:"message_id"`
-}
-
-type ChatMessagesDB struct {
-	messages []ChatMessageDB `json:"messages"`
-}
-
 type ChatUsersDB struct {
-	users []ChatUserDB `json:"users"`
+	Users []ChatUserDB `json:"users"`
 }
 
 // ToWeb converts DBChat to Chat
-func (dbChat *DBChat) ToWeb() *schemas.Chat {
+func (dbChat *ChatDB) ToWeb() *schemas.Chat {
 	return &schemas.Chat{
 		ID:        dbChat.ID,
 		CreatedAt: dbChat.CreatedAt,
@@ -48,15 +38,5 @@ func (ChatUserDB *ChatUserDB) ToWeb() *schemas.ChatUser {
 		CreatedAt: ChatUserDB.CreatedAt,
 		ChatID:    ChatUserDB.ChatID,
 		FromID:    ChatUserDB.FromID,
-	}
-}
-
-// ToWeb converts ChatMessageDB to Chat
-func (ChatMessageDB *ChatMessageDB) ToWeb() *schemas.ChatMessage {
-	return &schemas.ChatMessage{
-		ID:        ChatMessageDB.ID,
-		CreatedAt: ChatMessageDB.CreatedAt,
-		ChatID:    ChatMessageDB.ChatID,
-		MessageID: ChatMessageDB.MessageID,
 	}
 }
