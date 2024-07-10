@@ -1,5 +1,14 @@
 package api
 
+import (
+	"net/http"
+	"worki/internal/models"
+	"worki/internal/schemas"
+	"worki/internal/storage"
+
+	"github.com/labstack/echo/v4"
+)
+
 /*
 // @Summary Create chat
 // @Accept json
@@ -22,43 +31,43 @@ func CreateChat(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, dbChat.ToWeb())
-}
+}*/
 
 // @Summary Add user to chat
 // @Accept json
-// @Param request body schemas.AddUserToChatReq true "Add User to Chat data"
+// @Param request body schemas.ChatUserToCreate true "Add User to Chat data"
 // @Success 204 {object} nil
 // @Failure 400 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
-// @Router /chats/addUser [post]
+// @Router /chats/ [post]
 func AddUserToChat(c echo.Context) error {
-	req := new(schemas.AddUserToChatReq)
+	req := new(models.ChatUserDB)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.ErrBadRequest)
 	}
-
-	chat := &models.DBChat{}
-	dbRequest := storage.GetDB().Where("id = ?", req.ChatID)
-	if dbRequest.Error != nil {
-		return c.JSON(http.StatusBadRequest, schemas.HTTPError{Message: dbRequest.Error.Error()})
+	anotherUser := models.ChatUserDB{}
+	storage.GetDB().Find(&anotherUser, "fromid = ?", req.FromID)
+	if anotherUser.FromID == req.FromID {
+		return c.JSON(400, echo.ErrBadRequest)
 	}
-
-	chat.UsersID = append(chat.UsersID, req.UserID)
-	updateRequest := storage.GetDB().Save(chat)
-	if updateRequest.Error != nil {
-		return c.JSON(http.StatusInternalServerError, schemas.HTTPError{Message: updateRequest.Error.Error()})
+	tx := storage.GetDB().Create(&req)
+	if tx.Error != nil {
+		return c.JSON(500, schemas.HTTPError{
+			Message: tx.Error,
+		})
 	}
 
 	return c.NoContent(http.StatusNoContent)
 }
 
+/*
 // @Summary Get chat messages
 // @Accept json
 // @Param id path int true "Chat ID"
 // @Success 200 {object} schemas.GetChatMessagesRes
 // @Failure 404 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
-// @Router /chats/{id}/messages [get]
+// @Router /chats/msg/{id} [get]
 func GetChatMessages(c echo.Context) error {
 	chatID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -80,7 +89,7 @@ func GetChatMessages(c echo.Context) error {
 // @Success 200 {object} schemas.GetChatUsersRes
 // @Failure 404 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
-// @Router /chats/{id}/users [get]
+// @Router /chats/usr/{id}/users [get]
 func GetChatUsers(c echo.Context) error {
 	chatID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

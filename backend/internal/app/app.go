@@ -18,8 +18,9 @@ func RunApp(cfg *config.Config) {
 
 	e.Use(middleware.Recover())
 	usersGroup := e.Group("/users")
-	/*chatsGroup := e.Group("/chats")
-	messagesGroup := e.Group("/messages")*/
+	chatsGroup := e.Group("/chats")
+	/*
+		messagesGroup := e.Group("/messages")*/
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
@@ -31,12 +32,13 @@ func RunApp(cfg *config.Config) {
 	usersGroup.DELETE("/:id", api.DeleteUserByID)
 	usersGroup.DELETE("/usr/:username", api.DeleteUserByUsername)
 	usersGroup.Use(logger.LogRequest)
+	chatsGroup.POST("/", api.AddUserToChat)
+	chatsGroup.Use(logger.LogRequest)
 
 	/*chatsGroup.POST("/", api.CreateChat)
 	chatsGroup.GET("/", api.GetChats)
 	chatsGroup.GET("/messages/:id", api.GetChatMessages)
 	chatsGroup.GET("/users/:id", api.GetChatUsers)
-	chatsGroup.POST("/addUser", api.AddUserToChat)
 	chatsGroup.POST("/removeUser", api.RemoveUserFromChat)
 	chatsGroup.DELETE("/:id", api.DeleteChat)
 	chatsGroup.Use(logger.LogRequest)
