@@ -19,9 +19,160 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/chats/": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "Get chats",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.Chats"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.HTTPError"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "Update chat name",
+                "parameters": [
+                    {
+                        "description": "Chat data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schemas.ChatToUpdate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.HTTPError"
+                        }
+                    }
+                }
+            },
             "post": {
                 "consumes": [
                     "application/json"
+                ],
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "Create chat",
+                "parameters": [
+                    {
+                        "description": "Chat data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schemas.ChatToCreate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.Chat"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.HTTPError"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "Remove user from chat",
+                "parameters": [
+                    {
+                        "description": "Remove User from Chat data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/schemas.ChatUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/chats/add": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chats"
                 ],
                 "summary": "Add user to chat",
                 "parameters": [
@@ -54,10 +205,88 @@ const docTemplate = `{
                 }
             }
         },
-        "/chats/msg/{id}": {
+        "/chats/{id}": {
             "get": {
                 "consumes": [
                     "application/json"
+                ],
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "Get chat by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Chat ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.Chat"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.HTTPError"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "Delete chat by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Chat ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.HTTPError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.HTTPError"
+                        }
+                    }
+                }
+            }
+        },
+        "/chats/{id}/messages": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Chats"
                 ],
                 "summary": "Get chat messages",
                 "parameters": [
@@ -91,12 +320,15 @@ const docTemplate = `{
                 }
             }
         },
-        "/chats/{id}": {
-            "delete": {
+        "/chats/{id}/users": {
+            "get": {
                 "consumes": [
                     "application/json"
                 ],
-                "summary": "Delete chat by ID",
+                "tags": [
+                    "Chats"
+                ],
+                "summary": "Get chat users",
                 "parameters": [
                     {
                         "type": "integer",
@@ -107,8 +339,11 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "No Content"
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.Users"
+                        }
                     },
                     "404": {
                         "description": "Not Found",
@@ -129,6 +364,9 @@ const docTemplate = `{
             "get": {
                 "consumes": [
                     "application/json"
+                ],
+                "tags": [
+                    "Messages"
                 ],
                 "summary": "Get messages",
                 "responses": {
@@ -155,6 +393,9 @@ const docTemplate = `{
             "post": {
                 "consumes": [
                     "application/json"
+                ],
+                "tags": [
+                    "Messages"
                 ],
                 "summary": "Create message",
                 "parameters": [
@@ -195,6 +436,9 @@ const docTemplate = `{
                 "consumes": [
                     "application/json"
                 ],
+                "tags": [
+                    "Messages"
+                ],
                 "summary": "Delete message by ID",
                 "parameters": [
                     {
@@ -232,6 +476,9 @@ const docTemplate = `{
                 "consumes": [
                     "application/json"
                 ],
+                "tags": [
+                    "Users"
+                ],
                 "summary": "Get users",
                 "responses": {
                     "200": {
@@ -257,6 +504,9 @@ const docTemplate = `{
             "post": {
                 "consumes": [
                     "application/json"
+                ],
+                "tags": [
+                    "Users"
                 ],
                 "summary": "Create user",
                 "parameters": [
@@ -297,6 +547,9 @@ const docTemplate = `{
                 "consumes": [
                     "application/json"
                 ],
+                "tags": [
+                    "Users"
+                ],
                 "summary": "Get user by Username",
                 "parameters": [
                     {
@@ -332,6 +585,9 @@ const docTemplate = `{
                 "consumes": [
                     "application/json"
                 ],
+                "tags": [
+                    "Users"
+                ],
                 "summary": "Delete user by Username",
                 "parameters": [
                     {
@@ -365,6 +621,9 @@ const docTemplate = `{
             "get": {
                 "consumes": [
                     "application/json"
+                ],
+                "tags": [
+                    "Users"
                 ],
                 "summary": "Get user by ID",
                 "parameters": [
@@ -400,6 +659,9 @@ const docTemplate = `{
             "put": {
                 "consumes": [
                     "application/json"
+                ],
+                "tags": [
+                    "Users"
                 ],
                 "summary": "Update user",
                 "parameters": [
@@ -437,6 +699,9 @@ const docTemplate = `{
             "delete": {
                 "consumes": [
                     "application/json"
+                ],
+                "tags": [
+                    "Users"
                 ],
                 "summary": "Delete user by ID",
                 "parameters": [
@@ -491,6 +756,34 @@ const docTemplate = `{
                 }
             }
         },
+        "schemas.ChatToUpdate": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "schemas.ChatUser": {
+            "type": "object",
+            "properties": {
+                "chat_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "from_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
         "schemas.ChatUserToCreate": {
             "type": "object",
             "properties": {
@@ -499,6 +792,17 @@ const docTemplate = `{
                 },
                 "from_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "schemas.Chats": {
+            "type": "object",
+            "properties": {
+                "chats": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/schemas.Chat"
+                    }
                 }
             }
         },

@@ -13,12 +13,37 @@ definitions:
       name:
         type: string
     type: object
+  schemas.ChatToUpdate:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  schemas.ChatUser:
+    properties:
+      chat_id:
+        type: integer
+      created_at:
+        type: string
+      from_id:
+        type: integer
+      id:
+        type: integer
+    type: object
   schemas.ChatUserToCreate:
     properties:
       chat_id:
         type: integer
       from_id:
         type: integer
+    type: object
+  schemas.Chats:
+    properties:
+      chats:
+        items:
+          $ref: '#/definitions/schemas.Chat'
+        type: array
     type: object
   schemas.HTTPError:
     properties:
@@ -130,16 +155,16 @@ info:
   version: "0.1"
 paths:
   /chats/:
-    post:
+    delete:
       consumes:
       - application/json
       parameters:
-      - description: Add User to Chat data
+      - description: Remove User from Chat data
         in: body
         name: request
         required: true
         schema:
-          $ref: '#/definitions/schemas.ChatUserToCreate'
+          $ref: '#/definitions/schemas.ChatUser'
       responses:
         "204":
           description: No Content
@@ -151,7 +176,80 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/schemas.HTTPError'
-      summary: Add user to chat
+      summary: Remove user from chat
+      tags:
+      - Chats
+    get:
+      consumes:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.Chats'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Get chats
+      tags:
+      - Chats
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Chat data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/schemas.ChatToCreate'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/schemas.Chat'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Create chat
+      tags:
+      - Chats
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Chat data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/schemas.ChatToUpdate'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/schemas.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Update chat name
+      tags:
+      - Chats
   /chats/{id}:
     delete:
       consumes:
@@ -174,7 +272,34 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Delete chat by ID
-  /chats/msg/{id}:
+      tags:
+      - Chats
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Chat ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.Chat'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Get chat by ID
+      tags:
+      - Chats
+  /chats/{id}/messages:
     get:
       consumes:
       - application/json
@@ -198,6 +323,59 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Get chat messages
+      tags:
+      - Chats
+  /chats/{id}/users:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Chat ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.Users'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Get chat users
+      tags:
+      - Chats
+  /chats/add:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Add User to Chat data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/schemas.ChatUserToCreate'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Add user to chat
+      tags:
+      - Chats
   /messages/:
     get:
       consumes:
@@ -216,6 +394,8 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Get messages
+      tags:
+      - Messages
     post:
       consumes:
       - application/json
@@ -240,6 +420,8 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Create message
+      tags:
+      - Messages
   /messages/{id}:
     delete:
       consumes:
@@ -264,6 +446,8 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Delete message by ID
+      tags:
+      - Messages
   /users/:
     get:
       consumes:
@@ -282,6 +466,8 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Get users
+      tags:
+      - Users
     post:
       consumes:
       - application/json
@@ -306,6 +492,8 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Create user
+      tags:
+      - Users
   /users/{id}:
     delete:
       consumes:
@@ -328,6 +516,8 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Delete user by ID
+      tags:
+      - Users
     get:
       consumes:
       - application/json
@@ -351,6 +541,8 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Get user by ID
+      tags:
+      - Users
     put:
       consumes:
       - application/json
@@ -375,6 +567,8 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Update user
+      tags:
+      - Users
   /users/usr/{username}:
     delete:
       consumes:
@@ -397,6 +591,8 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Delete user by Username
+      tags:
+      - Users
     get:
       consumes:
       - application/json
@@ -420,4 +616,6 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Get user by Username
+      tags:
+      - Users
 swagger: "2.0"

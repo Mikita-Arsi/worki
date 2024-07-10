@@ -27,7 +27,3 @@ func (dbMessage *MessageDB) ToWeb() *schemas.Message {
 		CreatedAt: dbMessage.CreatedAt,
 	}
 }
-
-type MessagesDB struct {
-	Messages []MessageDB
-}

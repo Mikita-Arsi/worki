@@ -11,6 +11,7 @@ import (
 )
 
 // @Summary Create chat
+// @Tags Chats
 // @Accept json
 // @Param request body schemas.ChatToCreate true "Chat data"
 // @Success 201 {object} schemas.Chat
@@ -31,13 +32,75 @@ func CreateChat(c echo.Context) error {
 	return c.JSON(201, req.ToWeb())
 }
 
+// @Summary Get chats
+// @Tags Chats
+// @Accept json
+// @Success 200 {object} schemas.Chats
+// @Failure 404 {object} schemas.HTTPError
+// @Failure 500 {object} schemas.HTTPError
+// @Router /chats/ [get]
+func GetChats(c echo.Context) error {
+	var chats []models.ChatDB
+	var chatsSchema schemas.Chats
+	storage.GetDB().Find(&chats)
+	if len(chats) == 0 {
+		return c.JSON(404, echo.ErrNotFound)
+	}
+	for _, value := range chats {
+		chatsSchema.Chats = append(chatsSchema.Chats, *value.ToWeb())
+	}
+	return c.JSON(200, chatsSchema.Chats)
+}
+
+// @Summary Get chat by ID
+// @Tags Chats
+// @Accept json
+// @Param id path int true "Chat ID"
+// @Success 200 {object} schemas.Chat
+// @Failure 404 {object} schemas.HTTPError
+// @Failure 500 {object} schemas.HTTPError
+// @Router /chats/{id} [get]
+func GetChat(c echo.Context) error {
+	id := c.Param("id")
+	var chat models.ChatDB
+	tx := storage.GetDB().First(&chat, id)
+	if tx.Error != nil {
+		return c.JSON(404, echo.ErrNotFound)
+	}
+	return c.JSON(200, chat.ToWeb())
+}
+
+// @Summary Update chat name
+// @Tags Chats
+// @Accept json
+// @Param request body schemas.ChatToUpdate true "Chat data"
+// @Success 201 {object} schemas.User
+// @Failure 400 {object} schemas.HTTPError
+// @Failure 500 {object} schemas.HTTPError
+// @Router /chats/ [put]
+func UpdateChatName(c echo.Context) error {
+	chatSchema := new(schemas.ChatToUpdate)
+	if err := c.Bind(chatSchema); err != nil {
+		return c.JSON(400, echo.ErrBadRequest)
+	}
+	chat := models.ChatDB{}
+	storage.GetDB().First(&chat, chatSchema.ID)
+	chat.Name = chatSchema.Name
+	tx := storage.GetDB().Save(&chat)
+	if tx.Error != nil {
+		return c.JSON(500, echo.ErrInternalServerError)
+	}
+	return c.JSON(201, chat.ToWeb())
+}
+
 // @Summary Add user to chat
+// @Tags Chats
 // @Accept json
 // @Param request body schemas.ChatUserToCreate true "Add User to Chat data"
 // @Success 204 {object} nil
 // @Failure 400 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
-// @Router /chats/ [post]
+// @Router /chats/add [post]
 func AddUserToChat(c echo.Context) error {
 	req := new(models.ChatUserDB)
 	if err := c.Bind(req); err != nil {
@@ -59,12 +122,13 @@ func AddUserToChat(c echo.Context) error {
 }
 
 // @Summary Get chat messages
+// @Tags Chats
 // @Accept json
 // @Param id path int true "Chat ID"
 // @Success 200 {object} schemas.Messages
 // @Failure 404 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
-// @Router /chats/msg/{id} [get]
+// @Router /chats/{id}/messages [get]
 func GetChatMessages(c echo.Context) error {
 	chatID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -87,65 +151,58 @@ func GetChatMessages(c echo.Context) error {
 	return c.JSON(http.StatusOK, req)
 }
 
-/*
 // @Summary Get chat users
+// @Tags Chats
 // @Accept json
 // @Param id path int true "Chat ID"
-// @Success 200 {object} schemas.GetChatUsersRes
+// @Success 200 {object} schemas.Users
 // @Failure 404 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
-// @Router /chats/usr/{id}/users [get]
+// @Router /chats/{id}/users [get]
 func GetChatUsers(c echo.Context) error {
 	chatID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, schemas.HTTPError{Message: "Invalid chat ID"})
 	}
 
-	chat := &models.ChatDB{}
-	dbRequest := storage.GetDB().Where("id = ?", chatID).First(chat)
+	chat := []models.ChatUserDB{}
+	users := schemas.Users{}
+	dbRequest := storage.GetDB().Where("id = ?", chatID).Find(&chat)
 	if dbRequest.Error != nil {
 		return c.JSON(http.StatusInternalServerError, schemas.HTTPError{Message: dbRequest.Error.Error()})
 	}
+	for _, value := range chat {
+		user := &models.UserDB{}
+		storage.GetDB().First(user, "userid = ?", value.FromID)
+		users.Users = append(users.Users, *user.ToWeb())
+	}
 
-	return c.JSON(http.StatusOK, schemas.GetChatUsersRes{UsersID: chat.UsersID})
+	return c.JSON(http.StatusOK, users)
 }
 
-/*
 // @Summary Remove user from chat
+// @Tags Chats
 // @Accept json
-// @Param request body schemas.RemoveUserFromChatReq true "Remove User from Chat data"
+// @Param request body schemas.ChatUser true "Remove User from Chat data"
 // @Success 204 {object} nil
 // @Failure 400 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
-// @Router /chats/removeUser [post]
+// @Router /chats/ [delete]
 func RemoveUserFromChat(c echo.Context) error {
-	req := new(schemas.GetChatUsersRes)
+	req := new(models.ChatUserDB)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.ErrBadRequest)
 	}
-
-	chat := &models.DBChat{}
-	dbRequest := storage.GetDB().Where("id = ?", req.ChatID).First(chat)
-	if dbRequest.Error != nil {
-		return c.JSON(http.StatusBadRequest, schemas.HTTPError{Message: dbRequest.Error.Error()})
-	}
-
-	var updatedUsersID []int
-	for _, id := range chat.UsersID {
-		if id != req.UserID {
-			updatedUsersID = append(updatedUsersID, id)
-		}
-	}
-	chat.UsersID = updatedUsersID
-	updateRequest := storage.GetDB().Save(chat)
-	if updateRequest.Error != nil {
-		return c.JSON(http.StatusInternalServerError, schemas.HTTPError{Message: updateRequest.Error.Error()})
+	tx := storage.GetDB().Delete(&req)
+	if tx.Error != nil {
+		return c.JSON(404, echo.ErrNotFound)
 	}
 
 	return c.NoContent(http.StatusNoContent)
 }
-*/
+
 // @Summary Delete chat by ID
+// @Tags Chats
 // @Accept json
 // @Param id path int true "Chat ID"
 // @Success 204 {object} nil
@@ -160,7 +217,7 @@ func DeleteChat(c echo.Context) error {
 
 	dbRequest := storage.GetDB().Delete(&models.ChatDB{}, chatID)
 	if dbRequest.Error != nil {
-		return c.JSON(http.StatusInternalServerError, schemas.HTTPError{Message: dbRequest.Error.Error()})
+		return c.JSON(404, echo.ErrNotFound)
 	}
 
 	return c.NoContent(http.StatusNoContent)

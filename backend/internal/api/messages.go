@@ -11,6 +11,7 @@ import (
 )
 
 // @Summary Create message
+// @Tags Messages
 // @Accept json
 // @Param request body schemas.MessageToCreate true "Message data"
 // @Success 201 {object} schemas.Message
@@ -33,6 +34,7 @@ func CreateMessage(c echo.Context) error {
 }
 
 // @Summary Get messages
+// @Tags Messages
 // @Accept json
 // @Success 200 {object} schemas.Messages
 // @Failure 404 {object} schemas.HTTPError
@@ -40,14 +42,19 @@ func CreateMessage(c echo.Context) error {
 // @Router /messages/ [get]
 func GetMessages(c echo.Context) error {
 	var messages []models.MessageDB
+	var messageSchema schemas.Messages
 	storage.GetDB().Find(&messages)
 	if len(messages) == 0 {
 		return c.JSON(404, echo.ErrNotFound)
+	}
+	for _, value := range messages {
+		messageSchema.Messages = append(messageSchema.Messages, *value.ToWeb())
 	}
 	return c.JSON(200, messages)
 }
 
 // @Summary Delete message by ID
+// @Tags Messages
 // @Accept json
 // @Param id path int true "Message ID"
 // @Success 204 {object} schemas.Message
