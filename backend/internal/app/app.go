@@ -27,7 +27,7 @@ func RunApp(cfg *config.Config) {
 	usersGroup.GET("/", api.GetUsers)
 	usersGroup.GET("/:id", api.GetUserByID)
 	usersGroup.GET("/usr/:username", api.GetUserByUsername)
-	usersGroup.PUT("/", api.UpdateUser)
+	usersGroup.PUT("/:id", api.UpdateUser)
 	usersGroup.DELETE("/:id", api.DeleteUserByID)
 	usersGroup.DELETE("/usr/:username", api.DeleteUserByUsername)
 	usersGroup.Use(logger.LogRequest)

@@ -105,6 +105,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/schemas.User"
                         }
                     },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.HTTPError"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -130,6 +136,12 @@ const docTemplate = `{
                 "responses": {
                     "204": {
                         "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/schemas.HTTPError"
+                        }
                     },
                     "500": {
                         "description": "Internal Server Error",

@@ -79,6 +79,7 @@ func GetUserByID(c echo.Context) error {
 // @Accept json
 // @Param username path string true "Username"
 // @Success 200 {object} schemas.User
+// @Failure 404 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
 // @Router /users/usr/{username} [get]
 func GetUserByUsername(c echo.Context) error {
@@ -105,7 +106,12 @@ func UpdateUser(c echo.Context) error {
 	if err := c.Bind(userSchema); err != nil {
 		return c.JSON(400, echo.ErrBadRequest)
 	}
-	var user models.UserDB
+	anotherUser := models.UserDB{}
+	storage.GetDB().Find(&anotherUser, "username = ?", userSchema.Username)
+	if anotherUser.Username == userSchema.Username {
+		return c.JSON(400, echo.ErrBadRequest)
+	}
+	user := models.UserDB{}
 	storage.GetDB().First(&user, userSchema.ID)
 	user.Firstname = userSchema.Firstname
 	user.Lastname = userSchema.Lastname
@@ -113,9 +119,7 @@ func UpdateUser(c echo.Context) error {
 	user.Email = userSchema.Email
 	tx := storage.GetDB().Save(&user)
 	if tx.Error != nil {
-		return c.JSON(500, schemas.HTTPError{
-			Message: tx.Error,
-		})
+		return c.JSON(500, echo.ErrInternalServerError)
 	}
 	return c.JSON(201, user.ToWeb())
 }
@@ -140,15 +144,14 @@ func DeleteUserByID(c echo.Context) error {
 // @Accept json
 // @Param username path string true "Account Username"
 // @Success 204 {object} nil
+// @Failure 404 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
 // @Router /users/usr/{username} [delete]
 func DeleteUserByUsername(c echo.Context) error {
 	username := c.Param("username")
 	tx := storage.GetDB().Where("username = ?", username).Delete(&models.UserDB{})
 	if tx.Error != nil {
-		return c.JSON(500, schemas.HTTPError{
-			Message: tx.Error,
-		})
+		return c.JSON(404, echo.ErrNotFound)
 	}
 	return c.NoContent(204)
 }
