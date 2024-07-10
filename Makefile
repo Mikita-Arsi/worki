@@ -17,4 +17,4 @@ set-debez-conf:
          127.0.0.1:8083/connectors/ \
          --data "@debezium.json"
 
-all: rerun set-debez-conf
+all: rerun set-debez-co
