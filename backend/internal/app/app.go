@@ -18,16 +18,39 @@ func RunApp(cfg *config.Config) {
 
 	e.Use(middleware.Recover())
 	usersGroup := e.Group("/users")
+	chatsGroup := e.Group("/chats")
+	messagesGroup := e.Group("/messages")
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
+
 	usersGroup.POST("/", api.CreateUser)
 	usersGroup.GET("/", api.GetUsers)
 	usersGroup.GET("/:id", api.GetUserByID)
-	usersGroup.GET("/:username", api.GetUserByUsername)
-	usersGroup.PUT("/", api.UpdateUser)
+	usersGroup.GET("/usr/:username", api.GetUserByUsername)
+	usersGroup.PUT("/:id", api.UpdateUser)
 	usersGroup.DELETE("/:id", api.DeleteUserByID)
-	usersGroup.DELETE("/:username", api.DeleteUserByUsername)
+	usersGroup.DELETE("/usr/:username", api.DeleteUserByUsername)
 	usersGroup.Use(logger.LogRequest)
+
+	chatsGroup.POST("/", api.AddUserToChat)
+	chatsGroup.Use(logger.LogRequest)
+
+	messagesGroup.POST("/", api.CreateMessage)
+	messagesGroup.GET("/", api.GetMessages)
+	messagesGroup.DELETE("/:id", api.DeleteMessageByID)
+	messagesGroup.Use(logger.LogRequest)
+
+	/*chatsGroup.POST("/", api.CreateChat)
+	chatsGroup.GET("/", api.GetChats)
+	chatsGroup.GET("/messages/:id", api.GetChatMessages)
+	chatsGroup.GET("/users/:id", api.GetChatUsers)
+	chatsGroup.POST("/removeUser", api.RemoveUserFromChat)
+	chatsGroup.DELETE("/:id", api.DeleteChat)
+
+
+
+	messagesGroup.DELETE("/:chatID/:messageID", api.DeleteMessageByChatIDAndMessageID)
+	*/
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

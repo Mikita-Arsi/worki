@@ -39,6 +39,22 @@ definitions:
     - password
     - username
     type: object
+  schemas.UserToUpdate:
+    properties:
+      email:
+        type: string
+      firstname:
+        type: string
+      id:
+        type: integer
+      lastname:
+        type: string
+      username:
+        type: string
+    required:
+    - firstname
+    - username
+    type: object
   schemas.Users:
     properties:
       users:
@@ -110,8 +126,6 @@ paths:
       responses:
         "204":
           description: No Content
-          schema:
-            $ref: '#/definitions/schemas.User'
         "404":
           description: Not Found
           schema:
@@ -153,7 +167,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/schemas.User'
+          $ref: '#/definitions/schemas.UserToUpdate'
       responses:
         "201":
           description: Created
@@ -168,12 +182,12 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Update user
-  /users/{username}:
+  /users/usr/{username}:
     delete:
       consumes:
       - application/json
       parameters:
-      - description: Account ID
+      - description: Account Username
         in: path
         name: username
         required: true
@@ -181,8 +195,6 @@ paths:
       responses:
         "204":
           description: No Content
-          schema:
-            $ref: '#/definitions/schemas.User'
         "404":
           description: Not Found
           schema:
