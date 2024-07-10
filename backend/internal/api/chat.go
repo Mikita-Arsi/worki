@@ -61,7 +61,7 @@ func AddUserToChat(c echo.Context) error {
 // @Summary Get chat messages
 // @Accept json
 // @Param id path int true "Chat ID"
-// @Success 200 {object} schemas.GetChatMessagesRes
+// @Success 200 {object} schemas.Messages
 // @Failure 404 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
 // @Router /chats/msg/{id} [get]
@@ -71,12 +71,20 @@ func GetChatMessages(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, schemas.HTTPError{Message: "Invalid chat ID"})
 	}
 
-	chat := &models.MessageDB{}
-	dbRequest := storage.GetDB().Where("id = ?", chatID).Find(chat)
+	var messages []models.MessageDB
+	req := schemas.Messages{}
+	dbRequest := storage.GetDB().Find(&messages, "chatid = ?", chatID)
+	if len(messages) == 0 {
+		return c.JSON(404, echo.ErrNotFound)
+	}
 	if dbRequest.Error != nil {
 		return c.JSON(http.StatusInternalServerError, schemas.HTTPError{Message: dbRequest.Error.Error()})
 	}
-	return c.JSON(http.StatusOK, chat)
+	for _, value := range messages {
+		req.Messages = append(req.Messages, *value.ToWeb())
+	}
+
+	return c.JSON(http.StatusOK, req)
 }
 
 /*
@@ -93,7 +101,7 @@ func GetChatUsers(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, schemas.HTTPError{Message: "Invalid chat ID"})
 	}
 
-	chat := &models.DBChat{}
+	chat := &models.ChatDB{}
 	dbRequest := storage.GetDB().Where("id = ?", chatID).First(chat)
 	if dbRequest.Error != nil {
 		return c.JSON(http.StatusInternalServerError, schemas.HTTPError{Message: dbRequest.Error.Error()})
@@ -102,6 +110,7 @@ func GetChatUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, schemas.GetChatUsersRes{UsersID: chat.UsersID})
 }
 
+/*
 // @Summary Remove user from chat
 // @Accept json
 // @Param request body schemas.RemoveUserFromChatReq true "Remove User from Chat data"

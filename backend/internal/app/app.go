@@ -47,9 +47,6 @@ func RunApp(cfg *config.Config) {
 	chatsGroup.POST("/removeUser", api.RemoveUserFromChat)
 	chatsGroup.DELETE("/:id", api.DeleteChat)
 
-
-
-	messagesGroup.DELETE("/:chatID/:messageID", api.DeleteMessageByChatIDAndMessageID)
 	*/
 
 	e.Logger.Fatal(e.Start(":1323"))

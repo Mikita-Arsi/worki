@@ -1,7 +1,65 @@
 definitions:
+  schemas.Chat:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  schemas.ChatToCreate:
+    properties:
+      name:
+        type: string
+    type: object
+  schemas.ChatUserToCreate:
+    properties:
+      chat_id:
+        type: integer
+      from_id:
+        type: integer
+    type: object
   schemas.HTTPError:
     properties:
       message: {}
+    type: object
+  schemas.Message:
+    properties:
+      chat_id:
+        type: integer
+      created_at:
+        type: string
+      from_id:
+        type: integer
+      id:
+        type: integer
+      text:
+        type: string
+    required:
+    - chat_id
+    - from_id
+    - text
+    type: object
+  schemas.MessageToCreate:
+    properties:
+      chat_id:
+        type: integer
+      from_id:
+        type: integer
+      text:
+        type: string
+    required:
+    - chat_id
+    - from_id
+    - text
+    type: object
+  schemas.Messages:
+    properties:
+      messages:
+        items:
+          $ref: '#/definitions/schemas.Message'
+        type: array
     type: object
   schemas.User:
     properties:
@@ -71,6 +129,141 @@ info:
   title: Worki messenger API
   version: "0.1"
 paths:
+  /chats/:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Add User to Chat data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/schemas.ChatUserToCreate'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Add user to chat
+  /chats/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Chat ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Delete chat by ID
+  /chats/msg/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Chat ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.Messages'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Get chat messages
+  /messages/:
+    get:
+      consumes:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.Messages'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Get messages
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Message data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/schemas.MessageToCreate'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/schemas.Message'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Create message
+  /messages/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Message ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/schemas.Message'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/schemas.HTTPError'
+      summary: Delete message by ID
   /users/:
     get:
       consumes:
