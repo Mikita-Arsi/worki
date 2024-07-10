@@ -5,7 +5,7 @@ down:
 build:
 	docker-compose --env-file .env build
 up:
-	docker-compose up -d
+	docker-compose up
 run: build up
 
 rerun: stop down run

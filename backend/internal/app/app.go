@@ -48,5 +48,10 @@ func RunApp(cfg *config.Config) {
 	chatsGroup.POST("/add", api.AddUserToChat)
 	chatsGroup.Use(logger.LogRequest)
 
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
+
 	e.Logger.Fatal(e.Start(":1323"))
 }

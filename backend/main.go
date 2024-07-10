@@ -12,7 +12,7 @@ import (
 // @contact.name Worki Support
 // @contact.email support@worki.io
 
-// @host localhost:1323
+// @host localhost:80
 func main() {
 	cfg := config.Config{}
 	cfg.Load()

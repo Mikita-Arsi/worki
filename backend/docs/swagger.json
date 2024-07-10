@@ -9,7 +9,7 @@
         },
         "version": "0.1"
     },
-    "host": "localhost:1323",
+    "host": "localhost:80",
     "paths": {
         "/chats/": {
             "get": {
