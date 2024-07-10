@@ -1,15 +1,6 @@
 package api
 
-import (
-	"net/http"
-	"time"
-	"worki/internal/models"
-	"worki/internal/schemas"
-	"worki/internal/storage"
-
-	"github.com/labstack/echo/v4"
-)
-
+/*
 // @Summary Create message
 // @Accept json
 // @Param chatID path int true "Chat ID"
@@ -24,14 +15,14 @@ func CreateMessage(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, schemas.HTTPError{Message: "Invalid chat ID"})
 	}
 
-	req := new(schemas.MessageToCreate)
+	req := new(models.MessageToCreate)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.ErrBadRequest)
 	}
 
 	date := time.Now()
 	dbMessage := req.ToDB(date)
-	dbMessage.ChatID = uint(chatID)
+	dbMessage.ChatID = chatID
 	dbRequest := storage.GetDB().Create(dbMessage)
 	if dbRequest.Error != nil {
 		return c.JSON(http.StatusInternalServerError, schemas.HTTPError{Message: dbRequest.Error.Error()})
@@ -56,7 +47,7 @@ func GetMessages(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, echo.ErrNotFound)
 	}
 
-	var result []schemas.Message
+	var result []models.Message
 	for _, dbMessage := range messages {
 		result = append(result, *dbMessage.ToWeb())
 	}
@@ -110,3 +101,4 @@ func DeleteMessageByChatIDAndMessageID(c echo.Context) error {
 
 	return c.NoContent(http.StatusNoContent)
 }
+*/

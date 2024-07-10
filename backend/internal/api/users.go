@@ -66,9 +66,7 @@ func GetUserByID(c echo.Context) error {
 	var user models.UserDB
 	tx := storage.GetDB().First(&user, id)
 	if tx.Error != nil {
-		return c.JSON(500, schemas.HTTPError{
-			Message: tx.Error,
-		})
+		return c.JSON(404, echo.ErrNotFound)
 	}
 	return c.JSON(200, user.ToWeb())
 }
@@ -85,9 +83,7 @@ func GetUserByUsername(c echo.Context) error {
 	var user models.UserDB
 	tx := storage.GetDB().Where("username = ?", username).First(&user)
 	if tx.Error != nil {
-		return c.JSON(500, schemas.HTTPError{
-			Message: tx.Error,
-		})
+		return c.JSON(404, echo.ErrNotFound)
 	}
 	return c.JSON(200, user.ToWeb())
 }
@@ -122,14 +118,14 @@ func UpdateUser(c echo.Context) error {
 // @Summary Delete user by ID
 // @Accept json
 // @Param id path int true "Account ID"
-// @Success 204 {object} schemas.User
+// @Success 204 {object} nil
 // @Failure 404 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
 // @Router /users/{id} [delete]
 func DeleteUserByID(c echo.Context) error {
 	id := c.Param("id")
 	var user models.UserDB
-	tx := storage.GetDB().Delete(&user, id)
+	tx := storage.GetDB().Where("id = ?", id).Delete(&user)
 	if tx.Error != nil {
 		return c.JSON(500, schemas.HTTPError{
 			Message: tx.Error,
@@ -141,7 +137,7 @@ func DeleteUserByID(c echo.Context) error {
 // @Summary Delete user by Username
 // @Accept json
 // @Param username path string true "Account Username"
-// @Success 204 {object} schemas.User
+// @Success 204 {object} nil
 // @Failure 404 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
 // @Router /users/{username} [delete]

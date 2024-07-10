@@ -46,78 +46,12 @@ definitions:
           $ref: '#/definitions/schemas.User'
         type: array
     type: object
-  schemas.Chat:
-    properties:
-      id:
-        type: integer
-      created_at:
-        type: string
-      users_id:
-        type: array
-        items:
-          type: integer
-    required:
-    - users_id
-    type: object
-  schemas.ChatToCreate:
-    properties:
-      users_id:
-        type: array
-        items:
-          type: integer
-    required:
-    - users_id
-    type: object
-  schemas.Chats:
-    properties:
-      chats:
-        items:
-          $ref: '#/definitions/schemas.Chat'
-        type: array
-    type: object
-  schemas.Message:
-    properties:
-      id:
-        type: integer
-      chat_id:
-        type: integer
-      sender_id:
-        type: integer
-      text:
-        type: string
-      created_at:
-        type: string
-    required:
-    - chat_id
-    - sender_id
-    - text
-    type: object
-  schemas.MessageToCreate:
-    properties:
-      chat_id:
-        type: integer
-      sender_id:
-        type: integer
-      text:
-        type: string
-    required:
-    - chat_id
-    - sender_id
-    - text
-    type: object
-  schemas.Messages:
-    properties:
-      messages:
-        items:
-          $ref: '#/definitions/schemas.Message'
-        type: array
-    type: object
 host: localhost:1323
 info:
   contact:
     email: support@worki.io
     name: Worki Support
-  description: This is API for Worki Messenger.
+  description: This is API for Worki Messanger.
   title: Worki messenger API
   version: "0.1"
 paths:
@@ -176,8 +110,6 @@ paths:
       responses:
         "204":
           description: No Content
-          schema:
-            $ref: '#/definitions/schemas.User'
         "404":
           description: Not Found
           schema:
@@ -239,7 +171,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Account ID
+      - description: Account Username
         in: path
         name: username
         required: true
@@ -247,8 +179,6 @@ paths:
       responses:
         "204":
           description: No Content
-          schema:
-            $ref: '#/definitions/schemas.User'
         "404":
           description: Not Found
           schema:
@@ -281,188 +211,4 @@ paths:
           schema:
             $ref: '#/definitions/schemas.HTTPError'
       summary: Get user by Username
-  /chats/:
-    get:
-      consumes:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schemas.Chats'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-      summary: Get chats
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Chat data
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/schemas.ChatToCreate'
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/schemas.Chat'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-      summary: Create chat
-  /chats/{id}:
-    delete:
-      consumes:
-      - application/json
-      parameters:
-      - description: Chat ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      responses:
-        "204":
-          description: No Content
-          schema:
-            $ref: '#/definitions/schemas.Chat'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-      summary: Delete chat by ID
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: Chat ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schemas.Chat'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-      summary: Get chat by ID
-  /chats/{id}/messages:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: Chat ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schemas.Messages'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-      summary: Get messages in a chat
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Message data
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/schemas.MessageToCreate'
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/schemas.Message'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-      summary: Send message to a chat
-  /messages/{id}:
-    delete:
-      consumes:
-      - application/json
-      parameters:
-      - description: Message ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      responses:
-        "204":
-          description: No Content
-          schema:
-            $ref: '#/definitions/schemas.Message'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-      summary: Delete message by ID
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: Message ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/schemas.Message'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/schemas.HTTPError'
-      summary: Get message by ID
 swagger: "2.0"

@@ -1,16 +1,6 @@
 package api
 
-import (
-	"net/http"
-	"strconv"
-	"time"
-	"worki/internal/models"
-	"worki/internal/schemas"
-	"worki/internal/storage"
-
-	"github.com/labstack/echo/v4"
-)
-
+/*
 // @Summary Create chat
 // @Accept json
 // @Param request body schemas.ChatToCreate true "Chat data"
@@ -19,7 +9,7 @@ import (
 // @Failure 500 {object} schemas.HTTPError
 // @Router /chats/ [post]
 func CreateChat(c echo.Context) error {
-	req := new(schemas.ChatToCreate)
+	req := new(models.ChatToCreate)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.ErrBadRequest)
 	}
@@ -37,7 +27,7 @@ func CreateChat(c echo.Context) error {
 // @Summary Add user to chat
 // @Accept json
 // @Param request body schemas.AddUserToChatReq true "Add User to Chat data"
-// @Success 200 {object} schemas.AddUserToChatRes
+// @Success 204 {object} nil
 // @Failure 400 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
 // @Router /chats/addUser [post]
@@ -48,7 +38,7 @@ func AddUserToChat(c echo.Context) error {
 	}
 
 	chat := &models.DBChat{}
-	dbRequest := storage.GetDB().Where("id = ?", req.ChatID).First(chat)
+	dbRequest := storage.GetDB().Where("id = ?", req.ChatID)
 	if dbRequest.Error != nil {
 		return c.JSON(http.StatusBadRequest, schemas.HTTPError{Message: dbRequest.Error.Error()})
 	}
@@ -59,7 +49,7 @@ func AddUserToChat(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, schemas.HTTPError{Message: updateRequest.Error.Error()})
 	}
 
-	return c.JSON(http.StatusOK, schemas.AddUserToChatRes{})
+	return c.NoContent(http.StatusNoContent)
 }
 
 // @Summary Get chat messages
@@ -109,12 +99,12 @@ func GetChatUsers(c echo.Context) error {
 // @Summary Remove user from chat
 // @Accept json
 // @Param request body schemas.RemoveUserFromChatReq true "Remove User from Chat data"
-// @Success 200 {object} schemas.RemoveUserFromChatRes
+// @Success 204 {object} nil
 // @Failure 400 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
 // @Router /chats/removeUser [post]
 func RemoveUserFromChat(c echo.Context) error {
-	req := new(schemas.RemoveUserFromChatReq)
+	req := new(schemas.GetChatUsersRes)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.ErrBadRequest)
 	}
@@ -125,7 +115,7 @@ func RemoveUserFromChat(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, schemas.HTTPError{Message: dbRequest.Error.Error()})
 	}
 
-	var updatedUsersID []uint
+	var updatedUsersID []int
 	for _, id := range chat.UsersID {
 		if id != req.UserID {
 			updatedUsersID = append(updatedUsersID, id)
@@ -137,13 +127,13 @@ func RemoveUserFromChat(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, schemas.HTTPError{Message: updateRequest.Error.Error()})
 	}
 
-	return c.JSON(http.StatusOK, schemas.RemoveUserFromChatRes{})
+	return c.NoContent(http.StatusNoContent)
 }
 
 // @Summary Delete chat by ID
 // @Accept json
 // @Param id path int true "Chat ID"
-// @Success 204 {object} schemas.DeleteChatRes
+// @Success 204 {object} nil
 // @Failure 404 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
 // @Router /chats/{id} [delete]
@@ -160,3 +150,4 @@ func DeleteChat(c echo.Context) error {
 
 	return c.NoContent(http.StatusNoContent)
 }
+*/

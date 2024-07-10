@@ -172,10 +172,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "$ref": "#/definitions/schemas.User"
-                        }
+                        "description": "No Content"
                     },
                     "404": {
                         "description": "Not Found",
@@ -236,7 +233,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Account ID",
+                        "description": "Account Username",
                         "name": "username",
                         "in": "path",
                         "required": true
@@ -244,10 +241,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "$ref": "#/definitions/schemas.User"
-                        }
+                        "description": "No Content"
                     },
                     "404": {
                         "description": "Not Found",
