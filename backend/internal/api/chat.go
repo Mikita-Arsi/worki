@@ -183,11 +183,11 @@ func GetChatUsers(c echo.Context) error {
 // @Summary Remove user from chat
 // @Tags Chats
 // @Accept json
-// @Param request body schemas.ChatUser true "Remove User from Chat data"
+// @Param request body schemas.ChatUserToCreate true "Remove User from Chat data"
 // @Success 204 {object} nil
 // @Failure 400 {object} schemas.HTTPError
 // @Failure 500 {object} schemas.HTTPError
-// @Router /chats/ [delete]
+// @Router /chats/user [delete]
 func RemoveUserFromChat(c echo.Context) error {
 	req := new(models.ChatUserDB)
 	if err := c.Bind(req); err != nil {

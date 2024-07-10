@@ -127,23 +127,25 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "delete": {
+            }
+        },
+        "/chats/add": {
+            "post": {
                 "consumes": [
                     "application/json"
                 ],
                 "tags": [
                     "Chats"
                 ],
-                "summary": "Remove user from chat",
+                "summary": "Add user to chat",
                 "parameters": [
                     {
-                        "description": "Remove User from Chat data",
+                        "description": "Add User to Chat data",
                         "name": "request",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/schemas.ChatUser"
+                            "$ref": "#/definitions/schemas.ChatUserToCreate"
                         }
                     }
                 ],
@@ -166,18 +168,18 @@ const docTemplate = `{
                 }
             }
         },
-        "/chats/add": {
-            "post": {
+        "/chats/user": {
+            "delete": {
                 "consumes": [
                     "application/json"
                 ],
                 "tags": [
                     "Chats"
                 ],
-                "summary": "Add user to chat",
+                "summary": "Remove user from chat",
                 "parameters": [
                     {
-                        "description": "Add User to Chat data",
+                        "description": "Remove User from Chat data",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -764,23 +766,6 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
-                }
-            }
-        },
-        "schemas.ChatUser": {
-            "type": "object",
-            "properties": {
-                "chat_id": {
-                    "type": "integer"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "from_id": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer"
                 }
             }
         },

@@ -43,7 +43,7 @@ func RunApp(cfg *config.Config) {
 	chatsGroup.PUT("/:id", api.UpdateChatName)
 	chatsGroup.GET("/:id/messages", api.GetChatMessages)
 	chatsGroup.GET("/:id/users", api.GetChatUsers)
-	chatsGroup.DELETE("/", api.RemoveUserFromChat)
+	chatsGroup.DELETE("/user", api.RemoveUserFromChat)
 	chatsGroup.DELETE("/:id", api.DeleteChat)
 	chatsGroup.POST("/add", api.AddUserToChat)
 	chatsGroup.Use(logger.LogRequest)
